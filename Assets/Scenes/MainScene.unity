@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e1f3c69b65398742867d8d924d0b2b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivityX: 8
+  sensitivityX: 4
   sensitivityY: 0.5
   xClamp: 85
   playerCamera: {fileID: 963194228}
@@ -283,7 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a84d575d227ac84ca2424fcfc80000f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  walkingSpeed: 5
+  sprintingSpeed: 10
   jumpForce: 5
   groundCheck: {fileID: 351052768}
 --- !u!114 &438214150
@@ -581,7 +582,7 @@ Transform:
   m_GameObject: {fileID: 2107959957}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
