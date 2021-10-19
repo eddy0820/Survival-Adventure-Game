@@ -9,15 +9,16 @@ public class InputManager : MonoBehaviour
     PlayerControls controls;
     PlayerControls.GroundMovementActions groundMovement;
     Movement movement;
-    CameraLook cameraLook;
+    FirstPersonCamera firstPersonCamera;
     Vector2 horizontalInput;
     Vector2 mouseInput;
+    CameraSwitch cameraSwitch;
 
     private void Awake()
     {
-        // Gets movement and camera control components.
         movement = GetComponent<Movement>();
-        cameraLook = GetComponent<CameraLook>();
+        firstPersonCamera = GetComponentInChildren<FirstPersonCamera>();
+        cameraSwitch = GetComponent<CameraSwitch>();
 
         // Gets the controls from the new unity input system.
         controls = new PlayerControls();
@@ -42,13 +43,17 @@ public class InputManager : MonoBehaviour
             movement.OnSprintPressed(true);
         groundMovement.Sprint.canceled += _ =>
             movement.OnSprintPressed(false);
+
+        // Gets the value of SwitchCamera and calls a function to toggle the camera perspective.
+        groundMovement.SwitchCamera.performed += _ =>
+            cameraSwitch.OnSwitchCameraPressed();
     }
 
     private void Update()
     {
         // Sends the input to their respective classes.
         movement.ReceiveInput(horizontalInput);
-        cameraLook.ReceiveInput(mouseInput);
+        firstPersonCamera.ReceiveInput(mouseInput);
     }
     
     //Enables controls.
