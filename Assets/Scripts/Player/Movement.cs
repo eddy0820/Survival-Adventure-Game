@@ -2,23 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using SurvivalAdventureGame.Stats;
 
 // Class that handles basic movement for the player.
 public class Movement : MonoBehaviour
 {
     [SerializeField] Transform groundCheck;
-    [SerializeField] float walkingSpeed = 5;
-    [SerializeField] float sprintingSpeed = 8;
-    [SerializeField] float jumpForce = 5;
-    [SerializeField] float turnSmoothTime = 0.1f;
+    float turnSmoothTime = 0.1f;
     Vector2 horizontalInput;
     Rigidbody playerRigidbody;
     LayerMask groundLayerMask;
     CinemachineFreeLook thirdPersonCamera;
     CinemachineVirtualCamera firstPersonCamera;
+    PlayerStat playerStats;
+    StatModifier sprintingModifier;
     bool jump;
     bool isGrounded;
-    float currentMovementSpeed;
     float turnSmoothVelocity;
     
     private void Awake()
@@ -27,9 +26,13 @@ public class Movement : MonoBehaviour
         groundLayerMask = LayerMask.GetMask("Ground");
         thirdPersonCamera = GetComponentInChildren<CinemachineFreeLook>();
         firstPersonCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        playerStats = GetComponent<PlayerStat>();
+    }
 
-        // Assigns the walk speed as the current speed by default;
-        currentMovementSpeed = walkingSpeed;
+    private void Start()
+    {
+        // Caches the sprinting modifier after its initialized in PlayerStat
+        sprintingModifier = new StatModifier(playerStats.PlayerStats["SprintMult"].value, StatModifierTypes.PercentMult);
     }
 
     private void Update()
@@ -62,7 +65,7 @@ public class Movement : MonoBehaviour
     private void FirstPersonMovement()
     {
         // Calculates the velocity of the player according to the input.
-        Vector3 horizontalVelocity = (transform.right * horizontalInput.x + transform.forward * horizontalInput.y) * currentMovementSpeed;
+        Vector3 horizontalVelocity = (transform.right * horizontalInput.x + transform.forward * horizontalInput.y) * playerStats.PlayerStats["WalkSpeed"].value;
         
         // Sets the velocity of the player.
         playerRigidbody.velocity = new Vector3(horizontalVelocity.x, playerRigidbody.velocity.y, horizontalVelocity.z);
@@ -81,7 +84,7 @@ public class Movement : MonoBehaviour
         cameraForward.Normalize();
 
         // Calculates the velocity of the player according to the input and camera transforms.
-        Vector3 horizontalVelocity = (cameraRight * horizontalInput.x + cameraForward * horizontalInput.y) * currentMovementSpeed;
+        Vector3 horizontalVelocity = (cameraRight * horizontalInput.x + cameraForward * horizontalInput.y) * playerStats.PlayerStats["WalkSpeed"].value;
         
         // Sets the velocity of the player.
         playerRigidbody.velocity = new Vector3(horizontalVelocity.x, playerRigidbody.velocity.y, horizontalVelocity.z);
@@ -106,7 +109,7 @@ public class Movement : MonoBehaviour
             {   
                 // If both the jump button has been pressed & 
                 // the player is on the ground, makes the player jump.
-                playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                playerRigidbody.AddForce(Vector3.up * playerStats.PlayerStats["JumpForce"].value, ForceMode.Impulse);
             }
 
             // Disables the ability to jump.
@@ -125,11 +128,11 @@ public class Movement : MonoBehaviour
     {
         if(sprint)
         {
-            currentMovementSpeed = sprintingSpeed;
+            playerStats.PlayerStats["WalkSpeed"].AddModifier(sprintingModifier);
         }
         else
         {
-            currentMovementSpeed = walkingSpeed;
+            playerStats.PlayerStats["WalkSpeed"].RemoveModifier(sprintingModifier);
         }
     }
 

@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 30810452}
   - component: {fileID: 30810451}
   - component: {fileID: 30810456}
+  - component: {fileID: 30810457}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -157,10 +158,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 351052768}
-  walkingSpeed: 5
-  sprintingSpeed: 10
-  jumpForce: 5
-  turnSmoothTime: 0.1
 --- !u!114 &30810452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +231,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstPersonCameraScript: {fileID: 2062383745}
+--- !u!114 &30810457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30810450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df382ca748537d43907e43528b37146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStats: {fileID: 11400000, guid: 5b8e0ea671ad3a646be96785244d7497, type: 2}
+  testStats: 0
 --- !u!1 &165552250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,7 +1825,7 @@ Transform:
   m_GameObject: {fileID: 2107959957}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalScale: {x: 7, y: 1, z: 7}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
