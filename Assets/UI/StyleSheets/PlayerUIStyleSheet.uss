@@ -1,0 +1,28 @@
+.bar-style {
+    width: 130px;
+    height: 30px;
+}
+
+.bar-border-style {
+    background-image: url('/Assets/UI/Sprites/Bar Outline.png');
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.bar-fill-style {
+    background-image: url('/Assets/UI/Sprites/Health Bar Fill.png');
+    width: 122px;
+    height: 22px;
+    max-width: initial;
+    max-height: initial;
+}
+
+.bar-text {
+    -unity-text-align: middle-left;
+    bottom: 25px;
+    -unity-text-outline-width: 0;
+    -unity-font-style: bold;
+    -unity-text-outline-color: rgba(0, 0, 0, 255);
+    font-size: 14px;
+    position: absolute;
+}

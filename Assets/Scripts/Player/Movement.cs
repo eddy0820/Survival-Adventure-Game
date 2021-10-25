@@ -7,17 +7,20 @@ using SurvivalAdventureGame.Stats;
 // Class that handles basic movement for the player.
 public class Movement : MonoBehaviour
 {
+    public bool startedStaminaReductionCoroutine;
+    public bool startedStaminaRegenCoroutine;
+    public bool isSprinting;
     [SerializeField] Transform groundCheck;
-    float turnSmoothTime = 0.1f;
     Vector2 horizontalInput;
     Rigidbody playerRigidbody;
     LayerMask groundLayerMask;
     CinemachineFreeLook thirdPersonCamera;
     CinemachineVirtualCamera firstPersonCamera;
-    PlayerStat playerStats;
+    CharacterStat playerStats;
     StatModifier sprintingModifier;
     bool jump;
     bool isGrounded;
+    float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     
     private void Awake()
@@ -26,13 +29,13 @@ public class Movement : MonoBehaviour
         groundLayerMask = LayerMask.GetMask("Ground");
         thirdPersonCamera = GetComponentInChildren<CinemachineFreeLook>();
         firstPersonCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        playerStats = GetComponent<PlayerStat>();
+        playerStats = GetComponent<CharacterStat>();
     }
 
     private void Start()
     {
         // Caches the sprinting modifier after its initialized in PlayerStat
-        sprintingModifier = new StatModifier(playerStats.PlayerStats["SprintMult"].value, StatModifierTypes.PercentMult);
+        sprintingModifier = new StatModifier(playerStats.CharacterStats["SprintMult"].value, StatModifierTypes.PercentMult);
     }
 
     private void Update()
@@ -40,11 +43,13 @@ public class Movement : MonoBehaviour
         CheckSurroundings();
         MovePlayer();
         Jump();
+        ReduceStamina();
+        RegenStamina();
     }
 
     private void CheckSurroundings()
     {
-        //Checks to see if the player is on the ground according to the LayerMask.
+        // Checks to see if the player is on the ground according to the LayerMask.
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundLayerMask);
     }
 
@@ -65,7 +70,7 @@ public class Movement : MonoBehaviour
     private void FirstPersonMovement()
     {
         // Calculates the velocity of the player according to the input.
-        Vector3 horizontalVelocity = (transform.right * horizontalInput.x + transform.forward * horizontalInput.y) * playerStats.PlayerStats["WalkSpeed"].value;
+        Vector3 horizontalVelocity = (transform.right * horizontalInput.x + transform.forward * horizontalInput.y) * playerStats.CharacterStats["WalkSpeed"].value;
         
         // Sets the velocity of the player.
         playerRigidbody.velocity = new Vector3(horizontalVelocity.x, playerRigidbody.velocity.y, horizontalVelocity.z);
@@ -84,7 +89,7 @@ public class Movement : MonoBehaviour
         cameraForward.Normalize();
 
         // Calculates the velocity of the player according to the input and camera transforms.
-        Vector3 horizontalVelocity = (cameraRight * horizontalInput.x + cameraForward * horizontalInput.y) * playerStats.PlayerStats["WalkSpeed"].value;
+        Vector3 horizontalVelocity = (cameraRight * horizontalInput.x + cameraForward * horizontalInput.y) * playerStats.CharacterStats["WalkSpeed"].value;
         
         // Sets the velocity of the player.
         playerRigidbody.velocity = new Vector3(horizontalVelocity.x, playerRigidbody.velocity.y, horizontalVelocity.z);
@@ -105,11 +110,14 @@ public class Movement : MonoBehaviour
     {
         if(jump)
         {
-            if(isGrounded)
+            if(isGrounded && playerStats.CurrentStamina >= playerStats.CharacterStats["JumpStaminaCost"].value)
             {   
-                // If both the jump button has been pressed & 
-                // the player is on the ground, makes the player jump.
-                playerRigidbody.AddForce(Vector3.up * playerStats.PlayerStats["JumpForce"].value, ForceMode.Impulse);
+                // If  the jump button has been pressed & 
+                // the player is on the ground & has enough stamina, makes the player jump.
+                playerRigidbody.AddForce(Vector3.up * playerStats.CharacterStats["JumpForce"].value, ForceMode.Impulse);
+
+                // Reduces the stamina by x amount.
+                playerStats.ReduceStaminaJumping(); 
             }
 
             // Disables the ability to jump.
@@ -126,14 +134,46 @@ public class Movement : MonoBehaviour
     // Changes the player's movement speed according to whether the button was pressed in the InputManager.
     public void OnSprintPressed(bool sprint)
     {
-        if(sprint)
+        isSprinting = sprint;
+
+        if(sprint && playerStats.CurrentStamina > 0)
         {
-            playerStats.PlayerStats["WalkSpeed"].AddModifier(sprintingModifier);
+            playerStats.CharacterStats["WalkSpeed"].AddModifier(sprintingModifier);
         }
         else
         {
-            playerStats.PlayerStats["WalkSpeed"].RemoveModifier(sprintingModifier);
+            playerStats.CharacterStats["WalkSpeed"].RemoveModifier(sprintingModifier);
         }
+    }
+
+    // Reduces stamina while sprinting by x amount every second.
+    private void ReduceStamina()
+    {
+        if(!startedStaminaReductionCoroutine)
+        {
+            StartCoroutine(playerStats.ReduceStaminaSprinting());
+        }
+
+        if(playerStats.CurrentStamina <= 0)
+        {
+            // Takes away modifier even if you run out of stamina and are still holding the sprint key.
+            playerStats.CharacterStats["WalkSpeed"].RemoveModifier(sprintingModifier);
+        }
+    }
+    
+    // Regens stamina x amount every second.
+    private void RegenStamina()
+    {
+        if(!startedStaminaRegenCoroutine)
+        {
+            StartCoroutine(playerStats.RegenStamina());
+        }
+    }
+
+    // Used by other classes to see if the player is moving.
+    public Vector2 GetHorizontalInput()
+    {
+        return horizontalInput;
     }
 
     // Receives the input for horizontal movement from the InputManager.

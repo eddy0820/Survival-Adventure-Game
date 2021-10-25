@@ -65,6 +65,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleHUD"",
+                    ""type"": ""Button"",
+                    ""id"": ""c98886ed-a18e-480c-881f-29a8aa51cccb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -177,6 +185,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""SwitchCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c794129b-c452-457b-b04c-349afd25c4f4"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleHUD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +210,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_GroundMovement_MouseY = m_GroundMovement.FindAction("MouseY", throwIfNotFound: true);
         m_GroundMovement_Sprint = m_GroundMovement.FindAction("Sprint", throwIfNotFound: true);
         m_GroundMovement_SwitchCamera = m_GroundMovement.FindAction("SwitchCamera", throwIfNotFound: true);
+        m_GroundMovement_ToggleHUD = m_GroundMovement.FindAction("ToggleHUD", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -246,6 +266,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_GroundMovement_MouseY;
     private readonly InputAction m_GroundMovement_Sprint;
     private readonly InputAction m_GroundMovement_SwitchCamera;
+    private readonly InputAction m_GroundMovement_ToggleHUD;
     public struct GroundMovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -256,6 +277,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @MouseY => m_Wrapper.m_GroundMovement_MouseY;
         public InputAction @Sprint => m_Wrapper.m_GroundMovement_Sprint;
         public InputAction @SwitchCamera => m_Wrapper.m_GroundMovement_SwitchCamera;
+        public InputAction @ToggleHUD => m_Wrapper.m_GroundMovement_ToggleHUD;
         public InputActionMap Get() { return m_Wrapper.m_GroundMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -283,6 +305,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @SwitchCamera.started -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSwitchCamera;
                 @SwitchCamera.performed -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSwitchCamera;
                 @SwitchCamera.canceled -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSwitchCamera;
+                @ToggleHUD.started -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.performed -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.canceled -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnToggleHUD;
             }
             m_Wrapper.m_GroundMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -305,6 +330,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @SwitchCamera.started += instance.OnSwitchCamera;
                 @SwitchCamera.performed += instance.OnSwitchCamera;
                 @SwitchCamera.canceled += instance.OnSwitchCamera;
+                @ToggleHUD.started += instance.OnToggleHUD;
+                @ToggleHUD.performed += instance.OnToggleHUD;
+                @ToggleHUD.canceled += instance.OnToggleHUD;
             }
         }
     }
@@ -317,5 +345,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMouseY(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnSwitchCamera(InputAction.CallbackContext context);
+        void OnToggleHUD(InputAction.CallbackContext context);
     }
 }

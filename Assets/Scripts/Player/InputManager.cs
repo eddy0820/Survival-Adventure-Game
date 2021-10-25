@@ -13,12 +13,14 @@ public class InputManager : MonoBehaviour
     Vector2 horizontalInput;
     Vector2 mouseInput;
     CameraSwitch cameraSwitch;
+    PlayerUIController playerUI;
 
     private void Awake()
     {
         movement = GetComponent<Movement>();
         firstPersonCamera = GetComponentInChildren<FirstPersonCamera>();
         cameraSwitch = GetComponent<CameraSwitch>();
+        playerUI = GetComponentInChildren<PlayerUIController>();
 
         // Gets the controls from the new unity input system.
         controls = new PlayerControls();
@@ -47,6 +49,11 @@ public class InputManager : MonoBehaviour
         // Gets the value of SwitchCamera and calls a function to toggle the camera perspective.
         groundMovement.SwitchCamera.performed += _ =>
             cameraSwitch.OnSwitchCameraPressed();
+
+        //Gets the value of ToggleHUD and calls a function to toggle the HUD.
+        groundMovement.ToggleHUD.performed += _ =>
+            playerUI.OnToggleHUDPressed();
+
     }
 
     private void Update()

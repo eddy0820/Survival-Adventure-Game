@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="StyleSheets/PlayerUIStyleSheet.uss" />
+    <ui:VisualElement name="ui-holder" style="flex-grow: 1; align-items: stretch; justify-content: space-between;">
+        <ui:VisualElement name="top-bars-holder" />
+        <ui:VisualElement name="bottom-bars-holder" style="justify-content: space-between; flex-direction: row;">
+            <ui:VisualElement name="health-bar-holder" class="bar-style">
+                <ui:VisualElement name="health-bar-outline" class="bar-style bar-border-style">
+                    <ui:VisualElement name="health-bar-fill" class="bar-style bar-fill-style" style="left: 4px;" />
+                    <ui:Label text="Health:" display-tooltip-when-elided="true" name="health-text" class="bar-text" style="color: rgb(255, 8, 0);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="stamina-bar-holder">
+                <ui:VisualElement name="stamina-bar-outline" class="bar-style bar-border-style" style="align-items: flex-end;">
+                    <ui:VisualElement name="stamina-bar-fill" class="bar-style bar-fill-style" style="background-image: url(&apos;/Assets/UI/Sprites/Stamina Bar Fill.png&apos;); right: 4px;" />
+                    <ui:Label text="Stamina:" display-tooltip-when-elided="true" name="stamina-text" class="bar-text" style="color: rgb(33, 255, 16); left: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

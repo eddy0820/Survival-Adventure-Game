@@ -17,9 +17,15 @@ MonoBehaviour:
     value: 100
   - statType: {fileID: 11400000, guid: 23e0f2dbdea280a4f958c5db21bdbaef, type: 2}
     value: 100
+  - statType: {fileID: 11400000, guid: 32906ce46d55765468d9c7d007a01a69, type: 2}
+    value: 5
   - statType: {fileID: 11400000, guid: 9e62152ccd0eb1c459f448b8e070e86c, type: 2}
     value: 5
   - statType: {fileID: 11400000, guid: 86ee723b260f13a4fbf42a0e165d3e52, type: 2}
     value: 5
   - statType: {fileID: 11400000, guid: 955648d5d9044804683e41f5e00bbe4c, type: 2}
     value: 0.6
+  - statType: {fileID: 11400000, guid: fda836bad489cc242bea3e7ed8d6c73d, type: 2}
+    value: 5
+  - statType: {fileID: 11400000, guid: 2a7c7bc727ba9474fa77159d8c87bdf2, type: 2}
+    value: 25
